@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.newgiantbomb"
+       name="New Giant Bomb"
+       version="1.0"
+       provider-name="Whiskey Media">
+  <requires>
+    <import addon="xbmc.python" version="1.0"/>
+    <import addon="script.module.simplejson" version="2.1.6"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource"
+            library="default.py">
+        <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <summary>Giant Bomb video plugin</summary>
+    <description>Plugin that let's you play all videos from Giant Bomb.</description>
+  </extension>
+</addon>
