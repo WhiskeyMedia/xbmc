@@ -20,21 +20,42 @@ def CATEGORIES():
         name = cat['name']
         url = 'http://api.giantbomb.com/videos/?api_key=' + API_KEY + '&video_type=' + str(cat['id']) + '&sort=-publish_date&format=json'
         iconimage = ''
-        addDir(name, url, 2, '')
+        if str(cat['id']) == '5':
+            addDir(name, url, 1, '')
+        else:
+            addDir(name, url, 2, '')
 
 def INDEX(url):
-    req = urllib2.Request(url)
-    response = urllib2.urlopen(req)
-    link=response.read()
-    response.close()
-    match=re.compile('').findall(link)
-    for thumbnail,url,name in match:
-        addDir(name,url,2,thumbnail)
+    addDir('Deadly Premonition', url + '&DP', 2, '')
+    addDir('Persona 4', url + '&P4', 2, '')
+    addDir('The Matrix Online: Not Like This', url + '&MO', 2, '')
 
-def VIDEOLINKS(url,name):
-    response = urllib2.urlopen(url)
-    video_data = simplejson.loads(response.read())['results']
-    response.close()
+
+def VIDEOLINKS(url, name):
+    if url.endswith('&DP'):
+        response = urllib2.urlopen('http://api.giantbomb.com/videos/?api_key=' + API_KEY + '&video_type=5&offset=161&format=json')
+        video_data = simplejson.loads(response.read())['results']
+        response.close()
+    elif url.endswith('&P4'):
+        response = urllib2.urlopen('http://api.giantbomb.com/videos/?api_key=' + API_KEY + '&video_type=5&format=json')
+        video_data = simplejson.loads(response.read())['results']
+        response.close()
+
+        response = urllib2.urlopen('http://api.giantbomb.com/videos/?api_key=' + API_KEY + '&video_type=5&offset=100&limit=61&format=json')
+        video_data += simplejson.loads(response.read())['results']
+        response.close()
+
+        video_data = [video for video in video_data if not video['name'].startswith('The Matrix Online')]
+    elif url.endswith('&MO'):
+        response = urllib2.urlopen('http://api.giantbomb.com/videos/?api_key=' + API_KEY + '&video_type=5&offset=105&limit=21&format=json')
+        video_data = simplejson.loads(response.read())['results']
+        response.close()
+
+        video_data = [video for video in video_data if video['name'].startswith('The Matrix Online')]
+    else:
+        response = urllib2.urlopen(url)
+        video_data = simplejson.loads(response.read())['results']
+        response.close()
 
     for vid in video_data:
         name = vid['name']
@@ -60,14 +81,14 @@ def get_params():
 
     return param
 
-def addLink(name,url,iconimage):
+def addLink(name, url, iconimage):
     ok=True
     liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
     liz.setInfo( type="Video", infoLabels={ "Title": name } )
     ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
     return ok
 
-def addDir(name,url,mode,iconimage):
+def addDir(name, url, mode, iconimage):
     u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
     ok=True
     liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
