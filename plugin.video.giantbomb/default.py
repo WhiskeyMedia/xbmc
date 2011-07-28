@@ -21,15 +21,27 @@ def CATEGORIES():
         url = 'http://api.giantbomb.com/videos/?api_key=' + API_KEY + '&video_type=' + str(cat['id']) + '&sort=-publish_date&format=json'
         iconimage = ''
         if str(cat['id']) == '5':
-            addDir(name, url, 1, '')
+            addDir(name, '5', 1, '')
         else:
             addDir(name, url, 2, '')
 
-def INDEX(url):
-    addDir('Deadly Premonition', url + '&DP', 2, '')
-    addDir('Persona 4', url + '&P4', 2, '')
-    addDir('The Matrix Online: Not Like This', url + '&MO', 2, '')
+    name = 'Search'
+    url = 'http://api.giantbomb.com/search/?api_key=' + API_KEY + '&resources=video&query=[query]&format=json'
+    iconimage = ''
+    addDir(name, 'search', 1, '')
 
+def INDEX(url):
+    if url == 'search':
+        keyboard = xbmc.Keyboard("", 'Search', False)
+        keyboard.doModal()
+        if keyboard.isConfirmed():
+            query = keyboard.getText().replace(' ', '%20')
+            url = 'http://api.giantbomb.com/search/?api_key=' + API_KEY + '&resources=video&query=' + query + '&format=json'
+            VIDEOLINKS(url, 'search')
+    else:
+        addDir('Deadly Premonition', url + '&DP', 2, '')
+        addDir('Persona 4', url + '&P4', 2, '')
+        addDir('The Matrix Online: Not Like This', url + '&MO', 2, '')
 
 def VIDEOLINKS(url, name):
     if url.endswith('&DP'):
