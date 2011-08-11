@@ -44,7 +44,7 @@ def CATEGORIES():
 def GET_API_KEY(access_code):
     if access_code and len(access_code) == 6:
         try:
-            response = urllib2.urlopen(API_PATH + '/validate?api_key=' + API_KEY + '&format=json')
+            response = urllib2.urlopen(API_PATH + '/validate?access_code=' + access_code + '&format=json')
             data = simplejson.loads(response.read())
             api_key = data['api_key']
             d = shelve.open('local')
