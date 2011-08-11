@@ -3,22 +3,30 @@ import urllib2
 import simplejson
 import xbmcplugin
 import xbmcgui
+import shelve
 
+API_PATH = 'http://api.giantbomb.com'
 API_KEY = 'e5529a761ee3394ffbd237269966e9f53a4c7bf3'
 
 def CATEGORIES():
-    response = urllib2.urlopen('http://api.giantbomb.com/video_types/?api_key=' + API_KEY + '&format=json')
+    d = shelve.open('local')
+    if d.has_key('api_key'):
+        global API_KEY
+        API_KEY = d['api_key']
+    d.close()
+
+    response = urllib2.urlopen(API_PATH + '/video_types/?api_key=' + API_KEY + '&format=json')
     category_data = simplejson.loads(response.read())['results']
     response.close()
 
     name = 'Latest'
-    url = 'http://api.giantbomb.com/videos/?api_key=' + API_KEY + '&sort=-publish_date&format=json'
+    url = API_PATH + '/videos/?api_key=' + API_KEY + '&sort=-publish_date&format=json'
     iconimage = ''
     addDir(name, url, 2, '')
 
     for cat in category_data:
         name = cat['name']
-        url = 'http://api.giantbomb.com/videos/?api_key=' + API_KEY + '&video_type=' + str(cat['id']) + '&sort=-publish_date&format=json'
+        url = API_PATH + '/videos/?api_key=' + API_KEY + '&video_type=' + str(cat['id']) + '&sort=-publish_date&format=json'
         iconimage = ''
         if str(cat['id']) == '5':
             addDir(name, '5', 1, '')
@@ -26,9 +34,26 @@ def CATEGORIES():
             addDir(name, url, 2, '')
 
     name = 'Search'
-    url = 'http://api.giantbomb.com/search/?api_key=' + API_KEY + '&resources=video&query=[query]&format=json'
     iconimage = ''
     addDir(name, 'search', 1, '')
+
+    name = 'Register'
+    iconimage = ''
+    addDir(name, 'register', 1, '')
+
+def GET_API_KEY(access_code):
+    if access_code and len(access_code) == 6:
+        try:
+            response = urllib2.urlopen(API_PATH + '/validate?api_key=' + API_KEY + '&format=json')
+            data = simplejson.loads(response.read())
+            api_key = data['api_key']
+            d = shelve.open('local')
+            d['api_key'] = api_key
+            d.close()
+        except:
+            pass
+
+    CATEGORIES()
 
 def INDEX(url):
     if url == 'search':
@@ -36,8 +61,15 @@ def INDEX(url):
         keyboard.doModal()
         if keyboard.isConfirmed():
             query = keyboard.getText().replace(' ', '%20')
-            url = 'http://api.giantbomb.com/search/?api_key=' + API_KEY + '&resources=video&query=' + query + '&format=json'
+            url = API_PATH + '/search/?api_key=' + API_KEY + '&resources=video&query=' + query + '&format=json'
             VIDEOLINKS(url, 'search')
+
+    elif url == 'register':
+        keyboard = xbmc.Keyboard("", 'Access Code', False)
+        keyboard.doModal()
+        if keyboard.isConfirmed():
+            access_code = keyboard.getText().upper()
+            GET_API_KEY(access_code)
     else:
         addDir('Deadly Premonition', url + '&DP', 2, '')
         addDir('Persona 4', url + '&P4', 2, '')
@@ -45,21 +77,21 @@ def INDEX(url):
 
 def VIDEOLINKS(url, name):
     if url.endswith('&DP'):
-        response = urllib2.urlopen('http://api.giantbomb.com/videos/?api_key=' + API_KEY + '&video_type=5&offset=161&format=json')
+        response = urllib2.urlopen(API_PATH + '/videos/?api_key=' + API_KEY + '&video_type=5&offset=161&format=json')
         video_data = simplejson.loads(response.read())['results']
         response.close()
     elif url.endswith('&P4'):
-        response = urllib2.urlopen('http://api.giantbomb.com/videos/?api_key=' + API_KEY + '&video_type=5&format=json')
+        response = urllib2.urlopen(API_PATH + '/videos/?api_key=' + API_KEY + '&video_type=5&format=json')
         video_data = simplejson.loads(response.read())['results']
         response.close()
 
-        response = urllib2.urlopen('http://api.giantbomb.com/videos/?api_key=' + API_KEY + '&video_type=5&offset=100&limit=61&format=json')
+        response = urllib2.urlopen(API_PATH + '/videos/?api_key=' + API_KEY + '&video_type=5&offset=100&limit=61&format=json')
         video_data += simplejson.loads(response.read())['results']
         response.close()
 
         video_data = [video for video in video_data if not video['name'].startswith('The Matrix Online')]
     elif url.endswith('&MO'):
-        response = urllib2.urlopen('http://api.giantbomb.com/videos/?api_key=' + API_KEY + '&video_type=5&offset=105&limit=21&format=json')
+        response = urllib2.urlopen(API_PATH + '/videos/?api_key=' + API_KEY + '&video_type=5&offset=105&limit=21&format=json')
         video_data = simplejson.loads(response.read())['results']
         response.close()
 
@@ -71,7 +103,10 @@ def VIDEOLINKS(url, name):
 
     for vid in video_data:
         name = vid['name']
-        url = 'http://media.giantbomb.com/video/' + vid['url'].replace('.mp4', '_1500.mp4')
+        if 'hd_url' in vid:
+            url = vid['hd_url'] + '&api_key=' + API_KEY
+        else:
+            url = vid['high_url']
         thumbnail = vid['image']['super_url']
         addLink(name,url,thumbnail)
 
