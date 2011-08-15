@@ -41,10 +41,10 @@ def CATEGORIES():
     iconimage = ''
     addDir(name, 'register', 1, '')
 
-def GET_API_KEY(access_code):
-    if access_code and len(access_code) == 6:
+def GET_API_KEY(link_code):
+    if link_code and len(link_code) == 6:
         try:
-            response = urllib2.urlopen(API_PATH + '/validate?access_code=' + access_code + '&format=json')
+            response = urllib2.urlopen(API_PATH + '/validate?link_code=' + link_code + '&format=json')
             data = simplejson.loads(response.read())
             api_key = data['api_key']
             d = shelve.open('local')
@@ -68,8 +68,8 @@ def INDEX(url):
         keyboard = xbmc.Keyboard("", 'Access Code', False)
         keyboard.doModal()
         if keyboard.isConfirmed():
-            access_code = keyboard.getText().upper()
-            GET_API_KEY(access_code)
+            link_code = keyboard.getText().upper()
+            GET_API_KEY(link_code)
     else:
         addDir('Deadly Premonition', url + '&DP', 2, '')
         addDir('Persona 4', url + '&P4', 2, '')
