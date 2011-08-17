@@ -37,9 +37,9 @@ def CATEGORIES():
     iconimage = ''
     addDir(name, 'search', 1, '')
 
-    name = 'Register'
+    name = 'Link Account'
     iconimage = ''
-    addDir(name, 'register', 1, '')
+    addDir(name, 'link', 1, '')
 
 def GET_API_KEY(link_code):
     if link_code and len(link_code) == 6:
@@ -50,10 +50,11 @@ def GET_API_KEY(link_code):
             d = shelve.open('local')
             d['api_key'] = api_key
             d.close()
+            return True
         except:
-            pass
-
-    CATEGORIES()
+            return False
+    else:
+        return False
 
 def INDEX(url):
     if url == 'search':
@@ -64,12 +65,19 @@ def INDEX(url):
             url = API_PATH + '/search/?api_key=' + API_KEY + '&resources=video&query=' + query + '&format=json'
             VIDEOLINKS(url, 'search')
 
-    elif url == 'register':
-        keyboard = xbmc.Keyboard("", 'Access Code', False)
+    elif url == 'link':
+        dialog = xbmcgui.Dialog()
+        ok = dialog.ok("Let's do this.", "To link your account, visit", "www.giantbomb.com/xbmc to get a link code.", "Enter this code on the next screen.")
+
+        keyboard = xbmc.Keyboard("", 'Enter your link code.', False)
         keyboard.doModal()
         if keyboard.isConfirmed():
             link_code = keyboard.getText().upper()
-            GET_API_KEY(link_code)
+            if GET_API_KEY(link_code):
+                ok = dialog.ok("Success!", "Your account is now linked!", "If you are a premium member,", "you should now have premium privileges.")
+            else:
+                ok = dialog.ok("We're really sorry, but...", "We could not link your account.", "Make sure the code you entered is correct", "and try again.")
+            CATEGORIES()
     else:
         addDir('Deadly Premonition', url + '&DP', 2, '')
         addDir('Persona 4', url + '&P4', 2, '')
