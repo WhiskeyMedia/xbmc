@@ -6,7 +6,7 @@ import xbmcgui
 import shelve
 
 API_PATH = 'http://api.giantbomb.com'
-API_KEY = 'e5529a761ee3394ffbd237269966e9f53a4c7bf3'
+API_KEY = 'fa96542d69b4af7f31c2049ace5d89e84e225bef' # Default API key
 
 def CATEGORIES():
     d = shelve.open('local')
