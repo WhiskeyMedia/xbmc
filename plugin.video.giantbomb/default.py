@@ -4,12 +4,13 @@ import simplejson
 import xbmcplugin
 import xbmcgui
 import shelve
+import os
 
 API_PATH = 'http://api.giantbomb.com'
 API_KEY = 'fa96542d69b4af7f31c2049ace5d89e84e225bef' # Default API key
 
 def CATEGORIES():
-    d = shelve.open('local')
+    d = shelve.open(os.getcwd() + '/user_data')
     if d.has_key('api_key'):
         global API_KEY
         API_KEY = d['api_key']
@@ -47,7 +48,7 @@ def GET_API_KEY(link_code):
             response = urllib2.urlopen(API_PATH + '/validate?link_code=' + link_code + '&format=json')
             data = simplejson.loads(response.read())
             api_key = data['api_key']
-            d = shelve.open('local')
+            d = shelve.open(os.getcwd() + '/user_data')
             d['api_key'] = api_key
             d.close()
             return True
