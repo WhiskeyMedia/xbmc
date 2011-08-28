@@ -10,7 +10,8 @@ API_PATH = 'http://api.giantbomb.com'
 API_KEY = 'fa96542d69b4af7f31c2049ace5d89e84e225bef' # Default API key
 
 def CATEGORIES():
-    d = shelve.open(os.getcwd() + '/user_data')
+    path = os.path.abspath('user_data')
+    d = shelve.open(path)
     if d.has_key('api_key'):
         global API_KEY
         API_KEY = d['api_key']
@@ -48,7 +49,8 @@ def GET_API_KEY(link_code):
             response = urllib2.urlopen(API_PATH + '/validate?link_code=' + link_code + '&format=json')
             data = simplejson.loads(response.read())
             api_key = data['api_key']
-            d = shelve.open(os.getcwd() + '/user_data')
+            path = os.path.abspath('user_data')
+            d = shelve.open(path)
             d['api_key'] = api_key
             d.close()
             return True
