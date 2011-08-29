@@ -11,7 +11,7 @@ API_KEY = 'fa96542d69b4af7f31c2049ace5d89e84e225bef' # Default API key
 
 def CATEGORIES():
     account_linked = False
-    filename = os.path.abspath('user_data')
+    filename = os.path.abspath('user_data.db')
     d = shelve.open(filename)
     if d.has_key('api_key'):
         response = urllib2.urlopen(API_PATH + '/chats/?api_key=' + d['api_key'] + '&format=json')
@@ -20,6 +20,7 @@ def CATEGORIES():
             # Revert to the default key
             del d['api_key']
         else:
+            global API_KEY
             API_KEY = d['api_key']
             account_linked = True
     d.close()
@@ -57,7 +58,7 @@ def GET_API_KEY(link_code):
             response = urllib2.urlopen(API_PATH + '/validate?link_code=' + link_code + '&format=json')
             data = simplejson.loads(response.read())
             api_key = data['api_key']
-            filename = os.path.abspath('user_data')
+            filename = os.path.abspath('user_data.db')
             d = shelve.open(filename)
             d['api_key'] = api_key
             d.close()
@@ -68,7 +69,7 @@ def GET_API_KEY(link_code):
         return False
 
 def INDEX(url):
-    filename = os.path.abspath('user_data')
+    filename = os.path.abspath('user_data.db')
     d = shelve.open(filename)
     if d.has_key('api_key'):
         API_KEY = d['api_key']
@@ -101,7 +102,7 @@ def INDEX(url):
         addDir('The Matrix Online: Not Like This', url + '&MO', 2, '')
 
 def VIDEOLINKS(url, name):
-    filename = os.path.abspath('user_data')
+    filename = os.path.abspath('user_data.db')
     d = shelve.open(filename)
     if d.has_key('api_key'):
         API_KEY = d['api_key']
