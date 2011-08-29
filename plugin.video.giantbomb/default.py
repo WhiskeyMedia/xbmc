@@ -135,11 +135,6 @@ def VIDEOLINKS(url, name):
     for vid in video_data:
         name = vid['name']
         if 'hd_url' in vid:
-            # prot_url = vid['hd_url'].replace('download%3D1', 'api_key%3D' + API_KEY)
-            # response = urllib2.urlopen(prot_url)
-            # url = simplejson.loads(response.read())['url']
-            # response.close()
-            global API_KEY
             url = vid['hd_url'] + '&api_key=' + API_KEY
         else:
             url = vid['high_url']
