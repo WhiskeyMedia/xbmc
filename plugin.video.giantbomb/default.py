@@ -10,11 +10,19 @@ API_PATH = 'http://api.giantbomb.com'
 API_KEY = 'fa96542d69b4af7f31c2049ace5d89e84e225bef' # Default API key
 
 def CATEGORIES():
-    path = os.path.abspath('user_data')
-    d = shelve.open(path)
+    account_linked = False
+    filename = os.path.abspath('user_data')
+    d = shelve.open(filename)
     if d.has_key('api_key'):
-        global API_KEY
-        API_KEY = d['api_key']
+        response = urllib2.urlopen(API_PATH + '/chats/?api_key=' + d['api_key'] + '&format=json')
+        data = simplejson.loads(response.read())
+        if data['status_code'] == 100:
+            # Revert to the default key
+            del d['api_key']
+        else:
+            global API_KEY
+            API_KEY = d['api_key']
+            account_linked = True
     d.close()
 
     response = urllib2.urlopen(API_PATH + '/video_types/?api_key=' + API_KEY + '&format=json')
@@ -39,9 +47,10 @@ def CATEGORIES():
     iconimage = ''
     addDir(name, 'search', 1, '')
 
-    name = 'Link Account'
-    iconimage = ''
-    addDir(name, 'link', 1, '')
+    if not account_linked:
+        name = 'Link Account'
+        iconimage = ''
+        addDir(name, 'link', 1, '')
 
 def GET_API_KEY(link_code):
     if link_code and len(link_code) == 6:
@@ -49,8 +58,8 @@ def GET_API_KEY(link_code):
             response = urllib2.urlopen(API_PATH + '/validate?link_code=' + link_code + '&format=json')
             data = simplejson.loads(response.read())
             api_key = data['api_key']
-            path = os.path.abspath('user_data')
-            d = shelve.open(path)
+            filename = os.path.abspath('user_data')
+            d = shelve.open(filename)
             d['api_key'] = api_key
             d.close()
             return True
