@@ -20,7 +20,6 @@ def CATEGORIES():
             # Revert to the default key
             del d['api_key']
         else:
-            global API_KEY
             API_KEY = d['api_key']
             account_linked = True
     d.close()
@@ -69,6 +68,12 @@ def GET_API_KEY(link_code):
         return False
 
 def INDEX(url):
+    filename = os.path.abspath('user_data')
+    d = shelve.open(filename)
+    if d.has_key('api_key'):
+        API_KEY = d['api_key']
+    d.close()
+
     if url == 'search':
         keyboard = xbmc.Keyboard("", 'Search', False)
         keyboard.doModal()
@@ -96,6 +101,12 @@ def INDEX(url):
         addDir('The Matrix Online: Not Like This', url + '&MO', 2, '')
 
 def VIDEOLINKS(url, name):
+    filename = os.path.abspath('user_data')
+    d = shelve.open(filename)
+    if d.has_key('api_key'):
+        API_KEY = d['api_key']
+    d.close()
+
     if url.endswith('&DP'):
         response = urllib2.urlopen(API_PATH + '/videos/?api_key=' + API_KEY + '&video_type=5&offset=161&format=json')
         video_data = simplejson.loads(response.read())['results']
@@ -124,6 +135,11 @@ def VIDEOLINKS(url, name):
     for vid in video_data:
         name = vid['name']
         if 'hd_url' in vid:
+            # prot_url = vid['hd_url'].replace('download%3D1', 'api_key%3D' + API_KEY)
+            # response = urllib2.urlopen(prot_url)
+            # url = simplejson.loads(response.read())['url']
+            # response.close()
+            global API_KEY
             url = vid['hd_url'] + '&api_key=' + API_KEY
         else:
             url = vid['high_url']
