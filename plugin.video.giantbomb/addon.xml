@@ -5,7 +5,7 @@
        provider-name="Whiskey Media">
   <requires>
     <import addon="xbmc.python" version="1.0"/>
-    <import addon="script.module.simplejson" version="2.1.6"/>
+    <import addon="script.module.simplejson" version="2.0.10"/>
   </requires>
   <extension point="xbmc.python.pluginsource"
             library="default.py">
