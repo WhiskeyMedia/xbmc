@@ -9,7 +9,7 @@ import os
 
 API_PATH = 'http://api.giantbomb.com'
 API_KEY = 'fa96542d69b4af7f31c2049ace5d89e84e225bef' # Default API key
-my_addon = xbmcaddon.Addon('plugin.video.newgiantbomb')
+my_addon = xbmcaddon.Addon('plugin.video.giantbomb')
 
 def CATEGORIES():
     account_linked = False
