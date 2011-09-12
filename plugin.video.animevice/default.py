@@ -76,7 +76,7 @@ def INDEX(url):
 
     elif url == 'link':
         dialog = xbmcgui.Dialog()
-        ok = dialog.ok("Let's do this.", "To link your account, visit", "www.giantbomb.com/xbmc to get a link code.", "Enter this code on the next screen.")
+        ok = dialog.ok("Let's do this.", "To link your account, visit", "www.animevice.com/xbmc to get a link code.", "Enter this code on the next screen.")
 
         keyboard = xbmc.Keyboard("", 'Enter your link code.', False)
         keyboard.doModal()
