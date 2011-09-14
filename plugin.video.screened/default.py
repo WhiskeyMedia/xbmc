@@ -4,8 +4,6 @@ import simplejson
 import xbmcaddon
 import xbmcplugin
 import xbmcgui
-import shelve
-import os
 
 API_PATH = 'http://api.screened.com'
 API_KEY = '9122b637dc0b7e988c65da77bdcf5423e55f5412' # Default API key
@@ -76,7 +74,7 @@ def INDEX(url):
 
     elif url == 'link':
         dialog = xbmcgui.Dialog()
-        ok = dialog.ok("Let's do this.", "To link your account, visit", "www.animevice.com/xbmc to get a link code.", "Enter this code on the next screen.")
+        ok = dialog.ok("Let's do this.", "To link your account, visit", "www.screened.com/xbmc to get a link code.", "Enter this code on the next screen.")
 
         keyboard = xbmc.Keyboard("", 'Enter your link code.', False)
         keyboard.doModal()

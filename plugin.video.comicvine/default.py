@@ -4,8 +4,6 @@ import simplejson
 import xbmcaddon
 import xbmcplugin
 import xbmcgui
-import shelve
-import os
 
 API_PATH = 'http://api.comicvine.com'
 API_KEY = 'c64ac7ddc90513cc15539f1d606e8670b1ef0ae4' # Default API key

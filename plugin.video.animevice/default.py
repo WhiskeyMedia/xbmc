@@ -4,8 +4,6 @@ import simplejson
 import xbmcaddon
 import xbmcplugin
 import xbmcgui
-import shelve
-import os
 
 API_PATH = 'http://api.animevice.com'
 API_KEY = '13309fcce038ef04a05f2a5e2203b52ed3d47592' # Default API key
