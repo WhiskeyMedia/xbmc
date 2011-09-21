@@ -91,16 +91,26 @@ def VIDEOLINKS(url, name):
     if my_addon.getSetting('api_key'):
         API_KEY = my_addon.getSetting('api_key')
 
+    q_setting = int(my_addon.getSetting('quality'))
+    quality = None
+    if q_setting == 1:
+        quality = 'low_url'
+    elif q_setting == 2:
+        quality = 'high_url'
+
     response = urllib2.urlopen(url)
     video_data = simplejson.loads(response.read())['results']
     response.close()
 
     for vid in video_data:
         name = vid['name']
-        if 'hd_url' in vid:
-            url = vid['hd_url'] + '&api_key=' + API_KEY
+        if not quality:
+            if 'hd_url' in vid:
+                url = vid['hd_url'] + '&api_key=' + API_KEY
+            else:
+                url = vid['high_url']
         else:
-            url = vid['high_url']
+            url = vid[quality]
         thumbnail = vid['image']['super_url']
         addLink(name,url,thumbnail)
 
