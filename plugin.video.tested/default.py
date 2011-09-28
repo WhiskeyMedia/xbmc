@@ -6,8 +6,8 @@ import xbmcplugin
 import xbmcgui
 import os
 
-API_PATH = 'http://api.screened.com'
-API_KEY = '9122b637dc0b7e988c65da77bdcf5423e55f5412' # Default API key
+API_PATH = 'http://api.tested.com'
+API_KEY = 'df91891cf6c7e7475955d876926b3e9cf5a75743' # Default API key
 my_addon = xbmcaddon.Addon('plugin.video.tested')
 
 def CATEGORIES():
