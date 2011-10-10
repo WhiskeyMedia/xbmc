@@ -1,5 +1,5 @@
 [B]3.3[/B]
-- Version bump for Eden branch
+- Version bump and minor compatibility changes for Eden branch
 
 [B]2.3[/B]
 - Added option to choose video quality

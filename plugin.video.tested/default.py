@@ -4,7 +4,6 @@ import simplejson
 import xbmcaddon
 import xbmcplugin
 import xbmcgui
-import os
 
 API_PATH = 'http://api.tested.com'
 API_KEY = 'df91891cf6c7e7475955d876926b3e9cf5a75743' # Default API key
@@ -136,7 +135,7 @@ def addLink(name, url, iconimage):
     ok=True
     liz=xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
     liz.setInfo( type="Video", infoLabels={ "Title": name } )
-    liz.setProperty("fanart_image", os.path.abspath("fanart.jpg"))
+    liz.setProperty("fanart_image", my_addon.getAddonInfo('path') + "/fanart.jpg")
     ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=url,listitem=liz)
     return ok
 
@@ -145,7 +144,7 @@ def addDir(name, url, mode, iconimage):
     ok=True
     liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage)
     liz.setInfo( type="Video", infoLabels={ "Title": name } )
-    liz.setProperty("fanart_image", os.path.abspath("fanart.jpg"))
+    liz.setProperty("fanart_image", my_addon.getAddonInfo('path') + "/fanart.jpg")
     ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
     return ok
 
