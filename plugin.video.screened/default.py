@@ -62,6 +62,7 @@ def GET_API_KEY(link_code):
 
 def INDEX(url):
     if my_addon.getSetting('api_key'):
+        global API_KEY
         API_KEY = my_addon.getSetting('api_key')
 
     if url == 'search':
@@ -88,6 +89,7 @@ def INDEX(url):
 
 def VIDEOLINKS(url, name):
     if my_addon.getSetting('api_key'):
+        global API_KEY
         API_KEY = my_addon.getSetting('api_key')
 
     q_setting = int(my_addon.getSetting('quality'))
