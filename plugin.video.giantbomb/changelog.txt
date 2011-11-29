@@ -1,3 +1,6 @@
+[B]3.5[/B]
+- Added Chrono Trigger endurance run submenu
+
 [B]3.4[/B]
 - Fixed bug with search for non-subscribers
 

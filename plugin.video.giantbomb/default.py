@@ -111,7 +111,6 @@ def VIDEOLINKS(url, name):
         response = urllib2.urlopen(API_PATH + '/videos/?api_key=' + API_KEY + '&video_type=5&offset=240&format=json')
         video_data = simplejson.loads(response.read())['results']
         response.close()
-
     elif url.endswith('&DP'):
         response = urllib2.urlopen(API_PATH + '/videos/?api_key=' + API_KEY + '&video_type=5&offset=161&limit=79&format=json')
         video_data = simplejson.loads(response.read())['results']
